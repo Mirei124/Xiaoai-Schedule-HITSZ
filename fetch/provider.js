@@ -1,47 +1,47 @@
 async function scheduleHtmlProvider() {
-  await loadTool("AIScheduleTools")
+  await loadTool("AIScheduleTools");
 
   let school_year = await AISchedulePrompt({
     titleText: "学年",
     tipText: "请输入学年",
-    defaultText: "2022",
+    defaultText: "" + new Date().getFullYear(),
     validator: (value) => {
-      console.log(value)
+      console.log(value);
       try {
         if (parseInt(value) < 2100 && parseInt(value) > 2010) {
-          return false
+          return false;
         }
-        return "输入错误 例子: 2022"
+        return "输入错误 例子: 2022";
       } catch (e) {
-        return "输入错误 例子: 2022"
+        return "输入错误 例子: 2022";
       }
     },
-  })
+  });
 
   let semester = await AISchedulePrompt({
     titleText: "请输入学期",
-    tipText: "秋季输入 1 春季输入 2 小学期输入 3",
+    tipText: "秋季输入1 春季输入2 小学期输入3",
     defaultText: "2",
     validator: (value) => {
-      console.log(value)
+      console.log(value);
       try {
         if (value === "1" || value === "2" || value === "3") {
-          return false
+          return false;
         }
-        return "输入错误 例子: 2"
+        return "输入错误 例子: 2";
       } catch (e) {
-        return "输入错误 例子: 2"
+        return "输入错误 例子: 2";
       }
     },
-  })
+  });
 
   if (semester === "1") {
-    school_year = school_year + "-" + (parseInt(school_year) + 1)
+    school_year = school_year + "-" + (parseInt(school_year) + 1);
   } else {
-    school_year = parseInt(school_year) - 1 + "-" + school_year
+    school_year = parseInt(school_year) - 1 + "-" + school_year;
   }
 
-  let fetch_body = `xn=${school_year}&xq=${semester}`
+  let fetch_body = `xn=${school_year}&xq=${semester}`;
 
   try {
     let response = await fetch(
@@ -54,18 +54,18 @@ async function scheduleHtmlProvider() {
           "X-Requested-With": "XMLHttpRequest",
         },
         referrer: "http://jw.hitsz.edu.cn/authentication/main",
-        referrerPolicy: "strict-origin-when-cross-origin",
+        referrerPolicy: "unsafe-url",
         body: fetch_body,
         method: "POST",
         mode: "cors",
         credentials: "include",
       }
-    )
-    let data_json = await response.json()
-    let data = JSON.stringify(data_json)
-    return data
+    );
+    let data_json = await response.json();
+    let data = JSON.stringify(data_json);
+    return data;
   } catch (e) {
-    await AIScheduleAlert("fetch error: " + e.message)
-    return ""
+    await AIScheduleAlert("fetch error: " + e.message);
+    return "";
   }
 }
