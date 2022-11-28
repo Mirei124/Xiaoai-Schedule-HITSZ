@@ -18,10 +18,23 @@ async function scheduleHtmlProvider() {
     },
   });
 
+  const now = new Date();
+  let nowMonth = now.getMonth() + 1;
+  let target = 1;
+
+  if (nowMonth >= 2 && nowMonth <= 6) {
+    target = 2;
+  }
+  if (nowMonth === 7) {
+    target = 3;
+  } else {
+    target = 1;
+  }
+
   let semester = await AISchedulePrompt({
     titleText: "请输入学期",
     tipText: "秋季输入1 春季输入2 小学期输入3",
-    defaultText: "2",
+    defaultText: target,
     validator: (value) => {
       console.log(value);
       try {

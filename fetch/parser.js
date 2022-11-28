@@ -39,21 +39,35 @@ function scheduleHtmlParser(html) {
           course["teacher"] = teacher[0].slice(1, -1);
       }
 
-      let weeks_txt = txt.match(/\[[0-9,-]+周\]/g);
+      let weeks_txt = txt.match(/\[[0-9,-单双]+周\]/g);
       if (weeks_txt && weeks_txt.length) {
-        let weeks_list = weeks_txt[0].slice(1, -2).split(",");
+        let weeks_list = weeks_txt[0].slice(1, -1).split(",");
 
         for (let i = 0; i < weeks_list.length; i++) {
-          if (weeks_list[i].search("-") == -1) {
-            course["weeks"].push(parseInt(weeks_list[i]));
+          let textNow = weeks_list[i];
+          // 10
+          if (textNow.search("-") == -1) {
+            course["weeks"].push(parseInt(textNow));
             continue;
           }
 
-          let start_end = weeks_list[i].split("-");
+          // 11-17双周
+          let skipWeek = false;
+          if (textNow.search("双") != -1 || textNow.search("单") != -1) {
+            skipWeek = true;
+            textNow = textNow.slice(0, -2);
+          } else if (textNow.search("周") != -1) {
+            textNow = textNow.slice(0, -1);
+          }
+
+          let start_end = textNow.split("-");
           let start = parseInt(start_end[0]);
           let end = parseInt(start_end[1]);
           for (let j = start; j < end + 1; j++) {
-            course["weeks"].push(parseInt(j));
+            course["weeks"].push(j);
+            if (skipWeek) {
+              j++;
+            }
           }
         }
       }
