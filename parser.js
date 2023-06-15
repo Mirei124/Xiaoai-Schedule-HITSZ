@@ -6,7 +6,9 @@ function scheduleHtmlParser(html) {
     // 每节课
     for (let course_n = 0; course_n < all_course.length; course_n++) {
       // 过滤网课
-      if (all_course[course_n].KEY == "bz") continue;
+      if (all_course[course_n].KEY === "bz") continue;
+      // 去重
+      if (all_course[course_n].KEY.search("_jc1") === -1) continue;
 
       let day = parseInt(all_course[course_n].KEY.slice(2, 3));
       let txt = all_course[course_n].SKSJ;
@@ -35,7 +37,7 @@ function scheduleHtmlParser(html) {
 
       let teacher = txt.match(/\[.*?\]/g);
       if (teacher && teacher.length) {
-        if (teacher[0].search("-") == -1)
+        if (teacher[0].search("-") === -1)
           course["teacher"] = teacher[0].slice(1, -1);
       }
 
@@ -46,7 +48,7 @@ function scheduleHtmlParser(html) {
         for (let i = 0; i < weeks_list.length; i++) {
           let textNow = weeks_list[i];
           // 10
-          if (textNow.search("-") == -1) {
+          if (textNow.search("-") === -1) {
             course["weeks"].push(parseInt(textNow));
             continue;
           }
@@ -76,7 +78,7 @@ function scheduleHtmlParser(html) {
       if (sections && sections.length) {
         let section = sections[0].slice(0, -1);
 
-        if (section.search("-") == -1) {
+        if (section.search("-") === -1) {
           course["sections"].push(parseInt(section));
         } else {
           let start_end = section.split("-");
