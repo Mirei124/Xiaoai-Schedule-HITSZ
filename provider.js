@@ -57,7 +57,7 @@ async function scheduleHtmlProvider() {
       "http://jw.hitsz.edu.cn/xszykb/queryxszykbzong",
       {
         headers: {
-          "Accept": "*/*",
+          Accept: "*/*",
           "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
           "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
           "X-Requested-With": "XMLHttpRequest",
@@ -68,10 +68,10 @@ async function scheduleHtmlProvider() {
         method: "POST",
         mode: "no-cors",
         credentials: "include",
-      }
+      },
     );
     let data_json = await response.json();
-    let data = JSON.stringify(data_json);
+    let data = JSON.stringify(data_json).replaceAll(/\n/g, "");
     return data;
   } catch (e) {
     await AIScheduleAlert("导入失败，请确认登录成功后再点击开始导入");
